@@ -1,4 +1,4 @@
-<?php 
+<?php
 /**
  * <PROJECT_NAME>
  *
@@ -50,6 +50,24 @@ if($_SERVER['HTTP_HOST']=='localhost') array_shift($url);
 if(empty($url[count($url)-1])){
 	unset($url[count($url)-1]);
 }
+
+/* -----------------------------
+ * READING URL 2.0 need testing
+ * ------------------------------
+*/
+
+// $url = explode('/', $_SERVER['REQUEST_URI']);
+// $i;
+// for($i = 0;$i < count($url);$i++){
+// 	if($url[0] == 'system'){
+// 		array_shift($url);
+// 		break;
+// 	}
+// 	array_shift($url);
+// }
+// if(empty($url[count($url)-1])){
+// 	unset($url[count($url)-1]);
+// }
 
 /* --------------------------------------------------
  * LOADING FILES/OBJECTS/METHODS

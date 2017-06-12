@@ -2,7 +2,7 @@
  * Angular app definition
  * ----------------------------------------
  */
-var app = angular.module('app', ['ui.router']);
+var app = angular.module('app', ['ui.router', 'ngMask', 'angularFileUpload']);
 
 app.provider("$pathTo", function(){
 	var base = Window.PUBLIC_FOLDER_BASE_LINK;
@@ -21,4 +21,5 @@ app.provider("$pathTo", function(){
 			return paths
 		}
 	}
+	
 });

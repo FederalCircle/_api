@@ -106,6 +106,16 @@ class Controller
 		}
 	}
 
+	/*
+	 * ----------------------
+	 * Saving some time by setting success to false and just entering the message on error
+	 *
+	*/
+	public function setMessage($message){
+		$this->return['success'] = FALSE;
+		$this->return['error'] .= $message;
+	}
+
 	/**
 	 * If there's no $index, return an array with
 	 * the post received.
@@ -117,6 +127,7 @@ class Controller
 	 *
 	 * @return 	mixed 	Property received by JSON from the frontend.
 	 */
+
 	public function get_post($index = NULL){
 		if(isset($this->post)){
 			if(is_null($index)){
@@ -175,13 +186,16 @@ class Controller
 		return $this->lib[$file];
 	}
 
+	public function validateData($data){
+		return is_null($data);
+	}
+
 	public function add($table, $where, $field){
 		$data = $this->get_post();
 
 		//Non valid content on data array
-		if(is_null($data)){
-			$this->return['success'] = FALSE;
-			$this->return['error'] .= "Data array not match.";
+		if($this->validateData($data)){
+			$this->setMessage('Data not set.');
 			return;
 		}
 
@@ -189,8 +203,7 @@ class Controller
 
 		//Already exists
 		if($status){
-			$this->return['success'] = FALSE;
-			$this->return['error'] .= "Already exists";
+			$this->setMessage('Already exists.');
 			return;
 		}
 
@@ -198,8 +211,7 @@ class Controller
 		$status = $this->model[$this->modelname]->insert($table, $data);
 
 		if(!$status){
-			$this->return['success'] = FALSE;
-			$this->return['error'] .= "Erro ao inserir.";
+			$this->setMessage('Error during insert process.');
 			return;
 		}
 
