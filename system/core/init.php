@@ -40,9 +40,10 @@ defined('BASE_PATH') OR exit('No direct script access allowed');
 require_once 'config.php';
 
 /* --------------------------------------------------
- * READING URL
+ * READING URL (deprecated)
  * --------------------------------------------------
  */
+/*
 $url = explode('/', $_SERVER['REQUEST_URI']);
 array_shift($url);
 array_shift($url);
@@ -50,29 +51,23 @@ if($_SERVER['HTTP_HOST']=='localhost') array_shift($url);
 if(empty($url[count($url)-1])){
 	unset($url[count($url)-1]);
 }
-
-/* -----------------------------
- * READING URL 2.0 need testing
- * ------------------------------
 */
 
-// $url = explode('/', $_SERVER['REQUEST_URI']);
-// $i;
-// for($i = 0;$i < count($url);$i++){
-// 	if($url[0] == 'system'){
-// 		array_shift($url);
-// 		break;
-// 	}
-// 	array_shift($url);
-// }
-// if(empty($url[count($url)-1])){
-// 	unset($url[count($url)-1]);
-// }
+/* -----------------------------
+ * READING URL 2.0
+ * ------------------------------
+*/
+$url = explode('/', $_SERVER['REQUEST_URI']);
+while(array_shift($url) != SYSTEM_FOLDER)
+	array_shift($url);
+if(empty($url[count($url)-1]))
+	unset($url[count($url)-1]);
 
 /* --------------------------------------------------
  * LOADING FILES/OBJECTS/METHODS
  * --------------------------------------------------
  */
+/*
 require_once CORE_PATH.'Controller.php';
 
 if(isset($url[0])){
@@ -91,3 +86,30 @@ if(isset($url[0])){
 	}
 	else echo 'The file '.CONTROLLERS_PATH.'<strong>'.$url[0].'.php</strong>'.' does not exist.';
 }
+*/
+
+/* --------------------------------------------------
+ * LOADING FILES/OBJECTS/METHODS 2.0
+ * --------------------------------------------------
+ */
+require_once CORE_PATH.'Controller.php';
+
+if(isset($url[0])){
+	#Load the controller
+	if(file_exists(CONTROLLERS_PATH.$url[0].'.php')){
+		require_once CONTROLLERS_PATH.$url[0].'.php';
+		#Execute the controller method
+		if(isset($url[1])){
+			if(method_exists($url[0], $url[1])){
+				$_CONTROLLER = array_shift($url);
+				$_CONTROLLER = new $_CONTROLLER;
+				$_METHOD = array_shift($url);
+				call_user_func_array(array($_CONTROLLER, $_METHOD), $url);
+			}
+			else die(json_encode(array('success'=> 0, 'error'=> 'The '.CONTROLLERS_PATH.'<strong>'.$url[0].'.php</strong>'.' Class does not have <strong>'.$url[1].'( )</strong> method.')));
+		}
+	}
+	else die(json_encode(array('success'=> 0, 'error'=> 'The file '.CONTROLLERS_PATH.'<strong>'.$url[0].'.php</strong>'.' does not exist.')));
+}
+else die(json_encode(array('success'=> 0, 'error'=> 'A controller must be defined.')));
+

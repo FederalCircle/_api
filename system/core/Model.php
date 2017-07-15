@@ -76,7 +76,7 @@ class Model
 	function __construct(){
 		$this->conn = mysqli_connect(DB_HOST, DB_USER, DB_PASS, DB_NAME);
 		if($this->conn->connect_error){
-			die("<h1>CONNECTION ERROR #".$this->conn->connect_errno."</h1>".$this->conn->connect_error);
+			die(json_encode(array('success'=> 0, 'error'=> "<h1>CONNECTION ERROR #".$this->conn->connect_errno."</h1>".$this->conn->connect_error)));
 		}
 		/*UTF-8 Configs*/
 		$this->conn->query("SET NAMES 'utf8'");
