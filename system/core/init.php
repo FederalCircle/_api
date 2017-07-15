@@ -57,8 +57,11 @@ if(empty($url[count($url)-1])){
  * READING URL 2.0
  * ------------------------------
 */
+#Kepp the url starting from the controller name
 $url = explode('/', $_SERVER['REQUEST_URI']);
 while(array_shift($url) != SYSTEM_FOLDER);
+#Removes any GET parameters and empty blocks of url
+$url[count($url)-1] = explode('?', $url[count($url)-1])[0];
 if(empty($url[count($url)-1]))
 	unset($url[count($url)-1]);
 
@@ -105,10 +108,11 @@ if(isset($url[0])){
 				$_METHOD = array_shift($url);
 				call_user_func_array(array($_CONTROLLER, $_METHOD), $url);
 			}
-			else die(json_encode(array('success'=> 0, 'error'=> 'The '.CONTROLLERS_PATH.'<strong>'.$url[0].'.php</strong>'.' Class does not have <strong>'.$url[1].'( )</strong> method.')));
+			else die(json_encode(array('success'=> 0, 'error'=> 'The '.CONTROLLERS_PATH.$url[0].'.php Class does not have '.$url[1].'( ) method.')));
 		}
+		else die(json_encode(array('success'=> 0, 'error'=> 'A method for '.CONTROLLERS_PATH.$url[0].'.php must be defined.')));
 	}
-	else die(json_encode(array('success'=> 0, 'error'=> 'The file '.CONTROLLERS_PATH.'<strong>'.$url[0].'.php</strong>'.' does not exist.')));
+	else die(json_encode(array('success'=> 0, 'error'=> 'The file '.CONTROLLERS_PATH.$url[0].'.php does not exist.')));
 }
 else die(json_encode(array('success'=> 0, 'error'=> 'A controller must be defined.')));
 
