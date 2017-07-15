@@ -58,8 +58,7 @@ if(empty($url[count($url)-1])){
  * ------------------------------
 */
 $url = explode('/', $_SERVER['REQUEST_URI']);
-while(array_shift($url) != SYSTEM_FOLDER)
-	array_shift($url);
+while(array_shift($url) != SYSTEM_FOLDER);
 if(empty($url[count($url)-1]))
 	unset($url[count($url)-1]);
 
