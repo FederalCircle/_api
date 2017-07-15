@@ -13,6 +13,9 @@ class Test extends Controller
 	public function test(){
 
 	}
+	public function square(){
+
+	}
 
 
 }
